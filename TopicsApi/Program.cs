@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddTransient<ILookupOnCallDevelopers, FakeDeveloperLookup>();
 
 // Building the actual application 
 var app = builder.Build();
