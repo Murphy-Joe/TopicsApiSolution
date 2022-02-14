@@ -11,6 +11,8 @@ public class StatusController : ControllerBase
         _onCallDeveloperLookup = onCallDeveloperLookup;
     }
 
+
+
     [HttpGet("status/on-call-developer")] 
     public async Task<ActionResult<GetCurrentDeveloperModel>> GetOnCallDeveloperAsync()
     {
