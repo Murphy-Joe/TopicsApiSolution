@@ -13,3 +13,8 @@
 public record GetTopicListItemModel(string id, string name, string description);
 
 public record GetTopicsModel(IEnumerable<GetTopicListItemModel> data);
+
+
+// {name: "Line Dancing", description: "Resources about Line Dancing"}
+
+public record PostTopicRequestModel(string name, string description);
