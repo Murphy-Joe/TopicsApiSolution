@@ -1,8 +1,27 @@
+using AutoMapper;
+using TopicsApi.AutomapperProfiles;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Configuration of the backing services...
+//// Configuration of the backing services...
 builder.Services.AddControllers();
+//.ConfigureApiBehaviorOptions(options =>
+//{
+//    var builtInFactory = options.InvalidModelStateResponseFactory;
+
+//    options.InvalidModelStateResponseFactory = context =>
+//    {
+//        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+
+//        // Perform logging here.
+//        // ...
+
+//        // Invoke the default behavior, which produces a ValidationProblemDetails response.
+//        // To produce a custom response, return a different implementation of IActionResult instead.
+//        return builtInFactory(context);
+//    };
+//});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,6 +38,14 @@ builder.Services.AddCors(config =>
 
 builder.Services.AddTransient<ILookupOnCallDevelopers, FakeDeveloperLookup>();
 
+var mapperConfig = new MapperConfiguration(opts =>
+{
+    opts.AddProfile<TopicsProfile>();
+});
+
+builder.Services.AddSingleton<MapperConfiguration>(mapperConfig);
+var mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton<IMapper>(mapper);
 builder.Services.AddScoped<IProvideTopicsData, EfSqlTopicsData>();
 // The TopicsDataContext is set up as a Scoped service. You can inject it into your controllers, services, and stuff.
 builder.Services.AddDbContext<TopicsDataContext>(options =>
