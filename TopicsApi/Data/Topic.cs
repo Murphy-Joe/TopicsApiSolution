@@ -7,4 +7,6 @@ public class Topic
     public string Description { get; set; } = string.Empty;
 
     public bool IsDeleted { get; set; } 
+
+    public IEnumerable<Resource>? Resources { get; set; }
 }

@@ -55,12 +55,14 @@ builder.Services.AddHttpClient<OnCallApiHttpClient>(client =>
 var mapperConfig = new MapperConfiguration(opts =>
 {
     opts.AddProfile<TopicsProfile>();
+    opts.AddProfile<ResourcesProfile>();
 });
 
 builder.Services.AddSingleton<MapperConfiguration>(mapperConfig);
 var mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton<IMapper>(mapper);
 builder.Services.AddScoped<IProvideTopicsData, EfSqlTopicsData>();
+builder.Services.AddScoped<IProvideResourcesData, EfSqlResourcesData>();
 // The TopicsDataContext is set up as a Scoped service. You can inject it into your controllers, services, and stuff.
 builder.Services.AddDbContext<TopicsDataContext>(options =>
 {
