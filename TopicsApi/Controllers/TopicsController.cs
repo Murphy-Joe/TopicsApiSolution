@@ -1,6 +1,7 @@
 ﻿namespace TopicsApi.Controllers;
 
 [ApiController]
+[Produces("application/json")]
 public class TopicsController : ControllerBase
 {
     private readonly IProvideTopicsData _topicsData;
@@ -8,6 +9,32 @@ public class TopicsController : ControllerBase
     public TopicsController(IProvideTopicsData topicsData)
     {
         _topicsData = topicsData;
+    }
+
+    [HttpPut("topics/{id:int}")]
+    public async Task<ActionResult> ReplaceTopicAsync(int id, [FromBody] TopicListItemModel request)
+    {
+
+        // TODO: Mismatch on Ids
+        if(id != int.Parse(request.id))
+        {
+            return BadRequest("Back of 1337 Haxx0r!");
+        }
+        Maybe response = await _topicsData.ReplaceAsync(id, request);
+
+        return response.hasValue switch
+        {
+            true => NoContent(),
+            false => NotFound()
+        };
+    }
+
+    [HttpDelete("topics/{id:int}")]
+    public async Task<ActionResult> RemoveTopicAsync(int id)
+    {
+        await _topicsData.RemoveAsync(id);
+
+        return NoContent();
     }
 
 
@@ -18,7 +45,7 @@ public class TopicsController : ControllerBase
         // 3. If it IS valid
         //      a) do the work (side effect). (for us, add it to the database), etc.
 
-        GetTopicListItemModel response = await _topicsData.AddTopicAsync(request);
+        TopicListItemModel response = await _topicsData.AddTopicAsync(request);
         //      b) return a
         //         201 Created status code.
         //         Add a Location header to the response with the URI of the new resource (Location: http://localhost:1337/topics/3)
@@ -33,9 +60,9 @@ public class TopicsController : ControllerBase
     // GET /topics/99 => 200 with that document || 404
     // GET /topics/dog => 404
     [HttpGet("topics/{topicId:int}", Name ="topics.getbyidasync")]
-    public async Task<ActionResult> GetTopicByIdAsync(int topicId)
+    public async Task<ActionResult<TopicListItemModel>> GetTopicByIdAsync(int topicId)
     {
-        Maybe<GetTopicListItemModel> response = await _topicsData.GetTopicByIdAsync(topicId);
+        Maybe<TopicListItemModel> response = await _topicsData.GetTopicByIdAsync(topicId);
        
         return response.hasValue switch
         {
