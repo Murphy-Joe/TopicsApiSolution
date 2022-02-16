@@ -36,22 +36,16 @@ builder.Services.AddCors(config =>
     });
 });
 
+builder.Services.AddTransient<ILookupOnCallDevelopers, RpcDeveloperLookup>();
 
-var baseUrl = new Uri(builder.Configuration.GetValue<string>("on-call-developer-api"));
-//builder.Services.AddHttpClient<RpcDeveloperLookup>(config =>
-//{
-//    config.BaseAddress = baseUrl;
-//    config.DefaultRequestHeaders.Add("User-Agent", "Topics Api");
-//    config.DefaultRequestHeaders.Add("Accept", "application/json");
-//});
-builder.Services.AddHttpClient<RpcDeveloperLookup>(client =>
+
+builder.Services.AddHttpClient<OnCallApiHttpClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("on-call-developer-api"));
    
     client.DefaultRequestHeaders.Add("User-Agent", "Topics Api");
     client.DefaultRequestHeaders.Add("Acccept", "application/json");
 });
-builder.Services.AddTransient<ILookupOnCallDevelopers, RpcDeveloperLookup>();
 var mapperConfig = new MapperConfiguration(opts =>
 {
     opts.AddProfile<TopicsProfile>();

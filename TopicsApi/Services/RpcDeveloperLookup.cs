@@ -2,19 +2,15 @@
 
 public class RpcDeveloperLookup : ILookupOnCallDevelopers
 {
-    private readonly HttpClient _httpClient;
+    private readonly OnCallApiHttpClient _client;
 
-    public RpcDeveloperLookup(HttpClient httpClient)
+    public RpcDeveloperLookup(OnCallApiHttpClient client)
     {
-        _httpClient = httpClient; // NEVER EVER EVER call "New" on the HTTPClient
+        _client = client;
     }
 
     public async Task<GetCurrentDeveloperModel> GetCurrentOnCallDeveloperAsync()
     {
-        var response = await _httpClient.GetAsync("/");
-
-        var content = await response.Content.ReadFromJsonAsync<GetCurrentDeveloperModel>();
-
-        return content!;
+        return await _client.GetTheOnCallDeveloperAsync(); 
     }
 }
