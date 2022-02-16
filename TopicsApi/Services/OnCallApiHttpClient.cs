@@ -12,9 +12,10 @@ public class OnCallApiHttpClient
     public async Task<GetCurrentDeveloperModel> GetTheOnCallDeveloperAsync()
     {
         var response = await _httpClient.GetAsync("/");
-
+        response.EnsureSuccessStatusCode(); /// Throw an exception here!
         var content = await response.Content.ReadFromJsonAsync<GetCurrentDeveloperModel>();
 
         return content!;
+
     }
 }

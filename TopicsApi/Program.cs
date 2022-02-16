@@ -1,5 +1,7 @@
 using AutoMapper;
 using TopicsApi.AutomapperProfiles;
+using Microsoft.Extensions.Http;
+using TopicsApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,10 +44,14 @@ builder.Services.AddTransient<ILookupOnCallDevelopers, RpcDeveloperLookup>();
 builder.Services.AddHttpClient<OnCallApiHttpClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("on-call-developer-api"));
-   
+
     client.DefaultRequestHeaders.Add("User-Agent", "Topics Api");
     client.DefaultRequestHeaders.Add("Acccept", "application/json");
-});
+}).AddPolicyHandler(
+    HttpPolicies.GetDefaultRetryPolicy())
+    .AddPolicyHandler(
+    HttpPolicies.GetCircuitBreakerPolicy()
+   );
 var mapperConfig = new MapperConfiguration(opts =>
 {
     opts.AddProfile<TopicsProfile>();
@@ -78,3 +84,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run(); // blocking
+
+

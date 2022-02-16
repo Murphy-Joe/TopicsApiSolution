@@ -27,14 +27,11 @@ public record GetTopicsModel(IEnumerable<TopicListItemModel> data);
 // {name: "Line Dancing", description: "Resources about Line Dancing"}
 
 public record PostTopicRequestModel(
-
-    //[property:Required]
-    //[property:MinLength(3)]
-    //[property:MaxLength(20)]
+    [MinLength(3)]
+    [MaxLength(20)]
     string name,
-    //[property:Required]
-    //[property:MinLength(1)]
-    //[property:MaxLength(200)]
+    [MinLength(1)]
+    [MaxLength(200)]
     string description);
 
 //public record PostTopicRequestModel : IValidatableObject
